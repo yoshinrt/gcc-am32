@@ -1,0 +1,47 @@
+diff -ruN org_gcc-5.5.0/gcc/config/mn10300/mn10300.c gcc-5.5.0/gcc/config/mn10300/mn10300.c
+--- org_gcc-5.5.0/gcc/config/mn10300/mn10300.c	2015-01-15 22:28:42.000000000 +0900
++++ gcc-5.5.0/gcc/config/mn10300/mn10300.c	2026-03-03 13:39:59.497733500 +0900
+@@ -100,6 +100,7 @@
+ static void
+ mn10300_option_override (void)
+ {
++  target_flags &= ~MASK_MULT_BUG;
+   if (TARGET_AM33)
+     target_flags &= ~MASK_MULT_BUG;
+   else
+@@ -3341,12 +3342,12 @@
+ mn10300_reorg (void)
+ {
+   /* These are optimizations, so only run them if optimizing.  */
+-  if (TARGET_AM33 && (optimize > 0 || optimize_size))
++  if (optimize > 0 || optimize_size)
+     {
+       if (TARGET_ALLOW_SETLB)
+ 	mn10300_scan_for_setlb_lcc ();
+ 
+-      if (TARGET_ALLOW_LIW)
++      if (TARGET_AM33 && TARGET_ALLOW_LIW)
+ 	mn10300_bundle_liw ();
+     }
+ }
+diff -ruN org_gcc-5.5.0/gcc/config/mn10300/mn10300.md gcc-5.5.0/gcc/config/mn10300/mn10300.md
+--- org_gcc-5.5.0/gcc/config/mn10300/mn10300.md	2015-01-05 21:33:28.000000000 +0900
++++ gcc-5.5.0/gcc/config/mn10300/mn10300.md	2026-03-03 13:34:15.099557600 +0900
+@@ -2189,7 +2189,7 @@
+ 
+ (define_insn "setlb"
+   [(unspec [(const_int 0)] UNSPEC_SETLB)]
+-  "TARGET_AM33 && TARGET_ALLOW_SETLB"
++  "TARGET_ALLOW_SETLB"
+   "setlb"
+ )
+ 
+@@ -2200,7 +2200,7 @@
+ 		      (label_ref (match_operand 1 "" ""))
+ 		      (pc)))
+    (unspec [(const_int 1)] UNSPEC_SETLB)]
+-  "TARGET_AM33 && TARGET_ALLOW_SETLB"
++  "TARGET_ALLOW_SETLB"
+   "L%b0 # loop back to: %1"
+ )
+ 

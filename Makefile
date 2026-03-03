@@ -124,11 +124,21 @@ b.newlib:
 	touch $@
 
 b.gcc: b.binutils
-	if [ ! -d gcc-* ]; then tar xf ${SRC_DIR}/gcc-*.tar.*; cd gcc-*; contrib/download_prerequisites; fi
+	if [ ! -d gcc-* ]; then \
+		tar xf ${SRC_DIR}/gcc-*.tar.*; \
+		cd gcc-*; \
+		patch -p1 < ../gcc.patch; \
+		contrib/download_prerequisites; \
+	fi
 	$(MAKE) b.gcc-1
 	$(MAKE) b.newlib
 	$(MAKE) b.gcc-2
 	touch $@
+
+##############################################################################
+
+makepatch:
+	-diff -ruN org_gcc-5.5.0/gcc/config/mn10300 gcc-5.5.0/gcc/config/mn10300 > gcc.patch
 
 ##############################################################################
 
