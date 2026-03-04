@@ -148,4 +148,4 @@ makepatch:
 ##############################################################################
 
 clean:
-	rm -rf b.*
+	rm -rf b.* log gcc-*/build-* binutils-*/build newlib-*/build
