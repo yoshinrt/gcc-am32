@@ -113,7 +113,11 @@ b.gcc-2: b.gcc-2-cfg
 	touch $@
 
 b.newlib:
-	if [ ! -d newlib-* ]; then tar xf ${SRC_DIR}/newlib-*.tar.*; fi
+	if [ ! -d newlib-* ]; then \
+		tar xf ${SRC_DIR}/newlib-*.tar.*; \
+		cd newlib-*; \
+		patch -p1 < ../newlib.patch; \
+	fi
 	cd newlib-*; \
 	export CFLAGS="${CFLAGS} -D_LDBL_EQ_DBL -D__IEEE_LITTLE_ENDIAN -D__mn10300__"; mkdir -p build; cd build; \
 	../configure --target=${TARGET} --prefix=${PREFIX} \
@@ -139,6 +143,7 @@ b.gcc: b.binutils
 
 makepatch:
 	-diff -ruN org_gcc-5.5.0/gcc/config/mn10300 gcc-5.5.0/gcc/config/mn10300 > gcc.patch
+	-diff -ruN org_newlib-2.2.0.20150423/missing newlib-2.2.0.20150423/missing > newlib.patch
 
 ##############################################################################
 
