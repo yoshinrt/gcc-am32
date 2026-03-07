@@ -142,7 +142,9 @@ b.gcc: b.binutils
 ##############################################################################
 
 makepatch:
+	rm -f gcc-5.5.0/gcc/config/mn10300/*.orig
 	-diff -ruN org_gcc-5.5.0/gcc/config/mn10300 gcc-5.5.0/gcc/config/mn10300 > gcc.patch
+	rm -f newlib-2.2.0.20150423/missing.orig
 	-diff -ruN org_newlib-2.2.0.20150423/missing newlib-2.2.0.20150423/missing > newlib.patch
 
 ##############################################################################
