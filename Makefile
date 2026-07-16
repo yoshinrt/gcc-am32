@@ -6,8 +6,11 @@ export C_INCLUDE_PATH		:= ${DST_DIR}/include
 export CPLUS_INCLUDE_PATH	:= ${DST_DIR}/include
 export TARGET				:= mn10300-elf
 export PREFIX				:= ${DST_DIR}/mn10300
-export CFLAGS				:= -O2 -fcommon -w
+export CFLAGS				:= -O2 -fcommon -w -std=gnu89 -Wno-error=implicit-int -Wno-error=implicit-function-declaration
+export CFLAGS_FOR_BUILD		:= ${CFLAGS}
 export CXXFLAGS				:= -O2 -fcommon -w -std=gnu++11
+export CC_FOR_BUILD			:= gcc ${CFLAGS}
+export BUILD_CC			:= gcc ${CFLAGS}
 export GRAPHITE_LOOP_OPT	:= yes
 export PATH					:= ${DST_DIR}/bin:${PREFIX}/bin:${PATH}
 
@@ -83,7 +86,7 @@ b.gcc-1-cfg:
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-nls \
-		--disable-werror CXXFLAGS="${CXXFLAGS}" CFLAGS="${CFLAGS}"
+		--disable-werror CXXFLAGS="${CXXFLAGS}" CFLAGS="${CFLAGS}" CC_FOR_BUILD="gcc ${CFLAGS}"
 	touch $@
 
 b.gcc-1: b.gcc-1-cfg
@@ -104,7 +107,7 @@ b.gcc-2-cfg:
 		--disable-libgomp \
 		--disable-libmudflap \
 		--disable-nls \
-		--disable-werror CXXFLAGS="${CXXFLAGS}" CFLAGS="${CFLAGS}"
+		--disable-werror CXXFLAGS="${CXXFLAGS}" CFLAGS="${CFLAGS}" CC_FOR_BUILD="gcc ${CFLAGS}"
 	touch $@
 
 b.gcc-2: b.gcc-2-cfg
